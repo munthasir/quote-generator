@@ -3,12 +3,26 @@ const quoteText = document.getElementById('quote');
 const authorText = document.getElementById('author');
 const twitterBtn = document.getElementById('twitter');
 const newQuoteBtn = document.getElementById('new-quote');
+const loader = document.getElementById('loader');
 
 // Will get filled with API request in JSON format
 let apiQuotes = [];
 
+// Show Loading
+function loading() {
+    loader.hidden = false;
+    quoteContainer.hidden = true;
+}
+
+// Hide Loading
+function complete() {
+    loader.hidden = true;
+    quoteContainer.hidden = false;
+}
+
 // Show new Quote
 function newQuote() {
+    loading();
     // Pick a random quote from apiQuotes array
     const quote = apiQuotes[Math.floor(Math.random() * apiQuotes.length)];
     // Check if author field is blank and replace it with 'Unknown'
@@ -23,12 +37,14 @@ function newQuote() {
     } else {
         quoteText.classList.remove('long-quote');
     }
-    // New Quote text
+    // New Quote text and hide the Loader
     quoteText.textContent = quote.text;
+    complete();
 }
 
 // Get Quotes from API
 async function getQuotes() {
+    loading();
     const apiURL = 'https://type.fit/api/quotes' ;
     try {
         const response = await fetch(apiURL);
@@ -36,6 +52,8 @@ async function getQuotes() {
         newQuote();
     } catch (error) {
         // This is where we handle error maybe alert(error)
+        console.log("Error fetching the quote")
+        alert("Opps something went wrong. Please try again at a later time!")
     }
 }
 
