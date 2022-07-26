@@ -9,20 +9,20 @@ const loader = document.getElementById('loader');
 let apiQuotes = [];
 
 // Show Loading
-function loading() {
+function showLoadingSpinner() {
     loader.hidden = false;
     quoteContainer.hidden = true;
 }
 
 // Hide Loading
-function complete() {
+function removeLoadingSpinner() {
     loader.hidden = true;
     quoteContainer.hidden = false;
 }
 
 // Show new Quote
 function newQuote() {
-    loading();
+    showLoadingSpinner();
     // Pick a random quote from apiQuotes array
     const quote = apiQuotes[Math.floor(Math.random() * apiQuotes.length)];
     // Check if author field is blank and replace it with 'Unknown'
@@ -39,12 +39,13 @@ function newQuote() {
     }
     // New Quote text and hide the Loader
     quoteText.textContent = quote.text;
-    complete();
+    removeLoadingSpinner();
 }
 
 // Get Quotes from API
 async function getQuotes() {
-    loading();
+    showLoadingSpinner();
+    //Quote fetching website: https://quotes-react.netlify.app/
     const apiURL = 'https://type.fit/api/quotes' ;
     try {
         const response = await fetch(apiURL);
@@ -53,7 +54,6 @@ async function getQuotes() {
     } catch (error) {
         // This is where we handle error maybe alert(error)
         console.log("Error fetching the quote")
-        alert("Opps something went wrong. Please try again at a later time!")
     }
 }
 
@@ -67,5 +67,9 @@ function tweetQuote() {
 newQuoteBtn.addEventListener('click', newQuote);
 twitterBtn.addEventListener('click', tweetQuote);
 
-// On Load
-getQuotes();
+try {
+    // On Load
+    getQuotes();
+} catch (error) {
+    alert("Opps something went wrong. Please try again at a later time!")
+}
